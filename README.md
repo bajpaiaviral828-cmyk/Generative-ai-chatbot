@@ -1,5 +1,10 @@
 # My First Generative AI Chatbot 🤖
 
+### 🚀 Live Demo (No installation required!)
+You don't need to install anything to try this out. Just click the link below to open the Glassmorphism UI right in your browser!
+
+👉 **[Try the Live Demo Here](https://raw.githack.com/bajpaiaviral828-cmyk/generative-ai-chatbot/main/demo.html?v=2)**
+
 This is my very first project learning how to build AI applications! I built a command-line chatbot that connects to the Google Gemini API. 
 
 The coolest part is that it actually **remembers** what you say.

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Chatbot</title>
+  <style>
+    body { 
+      font-family: 'Inter', sans-serif; 
+      margin: 0; padding: 20px; min-height: 100vh;
+      display: flex; justify-content: center; align-items: center;
+      background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
+    }
+    .container { 
+      max-width: 500px; width: 100%; height: 80vh;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px); border-radius: 20px;
+      padding: 20px; display: flex; flex-direction: column;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3); color: white;
+    }
+    h2 { text-align: center; margin-top: 0; }
+    .chat-box {
+      flex: 1; overflow-y: auto;
+      background: rgba(0,0,0,0.2); border-radius: 10px;
+      padding: 15px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .msg { padding: 10px 15px; border-radius: 15px; max-width: 80%; }
+    .msg.user { background: #4facfe; align-self: flex-end; }
+    .msg.bot { background: rgba(255,255,255,0.2); align-self: flex-start; }
+    .input-area { display: flex; gap: 10px; }
+    input { 
+      flex: 1; padding: 12px; border-radius: 10px; border: none;
+      background: rgba(255,255,255,0.1); color: white; outline: none;
+    }
+    button { 
+      padding: 12px 20px; border-radius: 10px; border: none;
+      background: #4facfe; color: white; cursor: pointer; font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>🤖 AI Chatbot</h2>
+  <div class="chat-box" id="chat">
+    <div class="msg bot">Hello! I am your AI assistant. How can I help you today?</div>
+  </div>
+  <div class="input-area">
+    <input type="text" id="userInput" placeholder="Type a message..." onkeypress="handleEnter(event)">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+<script>
+  let chatHistory = "System: You are a helpful AI assistant.\\n";
+  
+  async function sendMessage() {
+    const input = document.getElementById('userInput');
+    const text = input.value.trim();
+    if (!text) return;
+    
+    appendMessage(text, 'user');
+    input.value = '';
+    
+    chatHistory += "User: " + text + "\\nBot:";
+    const encodedPrompt = encodeURIComponent(chatHistory);
+    const url = `https://text.pollinations.ai/${encodedPrompt}?system=You%20are%20a%20helpful%20AI%20assistant.`;
+    
+    try {
+      const response = await fetch(url);
+      const reply = await response.text();
+      appendMessage(reply, 'bot');
+      chatHistory += reply + "\\n";
+    } catch (e) {
+      appendMessage("Error: Could not reach the API.", 'bot');
+    }
+  }
+
+  function appendMessage(text, sender) {
+    const chat = document.getElementById('chat');
+    const msg = document.createElement('div');
+    msg.className = `msg ${sender}`;
+    msg.textContent = text;
+    chat.appendChild(msg);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function handleEnter(e) { if (e.key === 'Enter') sendMessage(); }
+</script>
+</body>
+</html>
